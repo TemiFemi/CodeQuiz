@@ -4,7 +4,7 @@
 }
 
 :root {
-    --hue-neautral: 0,0,0  ;
+    --hue-neautral: 0,0,0;
     --hue-wrong: 0;
     --hue-correct: 145;
 }
@@ -52,7 +52,7 @@ body.wrong {
     background-color: hsl(var(--hue) 100%, 50%);
     border-radius: 5px;
     padding: 5px 10px;
-    color: white;
+    color: black;
     outline:none;
 }
 
@@ -92,10 +92,22 @@ body.wrong {
     align-items: center;
 }
 
+.zero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:royalblue;
+}
+
 .hide {
     display: none;
 }
 
+.time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 @-webkit-keyframes glow {
     from {
       text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
