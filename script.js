@@ -9,7 +9,7 @@ var secondsleft = 60;
 
 // shuffles questions and tells us which question in the shuffle question we are on
 
-// chan
+// change it to "let" so we can define it later
 let shuffledQuestions, currentQuestionIndex
 
 //ques the code in the start menu
@@ -46,6 +46,7 @@ function setNextQuestion() {
 // select answer when we do something
 function selectAnswer(e) {
   //whatever potential answer we click on 
+  // target: returns the element that triggered the event.
   const selectedButton = e.target
   // check to see if it's correct
   const correct = selectedButton.dataset.correct;
@@ -83,8 +84,8 @@ function clearStatusClass(element) {
 }
 
 function showQuestion(data) {
-  // inner text e
   questionElement.innerText = data.question;
+  // Populates our different answers
   data.answers.forEach(answer => {
     const button = document.createElement('button')
     button.innerText = answer.text
@@ -93,10 +94,12 @@ function showQuestion(data) {
       button.dataset.correct = answer.correct
     }
     button.addEventListener('click', selectAnswer)
+    //apends button that was created.
     answerButtonsElement.appendChild(button)
   });
 
 }
+
 
 function resetState() {
   clearStatusClass(document.body)
