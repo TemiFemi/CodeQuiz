@@ -7,13 +7,18 @@ const questionEl = document.getElementById('question')
 const answerBtEl = document.getElementById('answer-btn')
 var finalId = document.getElementById("final-container");
 var highScores = document.getElementById('high-score')
+var responseEl = document.getElementById('game')
+var finalScore = document.getElementById('score')
 var timerinterval
 var secondsleft = 60;
+var myTimer;
+var questionIndex = 0
+var scores = []
 
 // shuffles questions and tells us which question in the shuffle question we are on
 
 // change it to "let" so we can define it later
-let questionShu, questionIndex
+let questionShu
 
 //ques the code in the start menu
 buttonStart.addEventListener('click', gameStart);
@@ -47,11 +52,13 @@ function nextQuestion() {
 
 }
 
+
 // select answer when we do something
-function chooseAnswer(e) {
+function chooseAnswer(choice) {
+
   //whatever potential answer we click on 
   // target: returns the element that triggered the event.
-  const selectedButton = e.target
+  const selectedButton = choice.target
   // check to see if it's correct
   const correct = selectedButton.dataset.correct;
   setStatusClass(document.body, correct);
@@ -64,7 +71,7 @@ function chooseAnswer(e) {
   if (questionShu.length > questionIndex + 1) {
     buttonNext.classList.remove('hide')
   } else {
-    //restarts game
+
     clearInterval(timerinterval);
     questionContainer.classList.add("hide")
     //returns all of the classes from that list
@@ -72,30 +79,91 @@ function chooseAnswer(e) {
     var spanId = document.getElementById('score')
     spanId.textContent = secondsleft
     var buttonGame = document.getElementById('game')
-    buttonGame.addEventListener("click", function () {
+    buttonGame.addEventListener("click", function (event) {
+      // event.preventDefault();
+
+      console.log(event)
       var initialsGame = document.getElementById("initials")
       var initials = initialsGame.value
       console.log(initials)
       console.log(secondsleft)
       var results = JSON.parse(localStorage.getItem("Scores")) || []
+      // console.log("+++++++")
+      // console.log(results[0].initials)
+      // console.log("+++++++")
       var newResult = { "initials": initials, "score": secondsleft }
       results.push(newResult)
-      localStorage.setItem("Scores", JSON.stringify(results))
+      localStorage.setItem(initials, JSON.stringify(secondsleft))
+      var response = "Thank You for your submission "
+      responseEl.textContent = response;
     })
+
     // buttonStart.innerText = 'Restart'
     // buttonStart.classList.remove('hide')
   }
 }
 
+function displayUserScore() {
+  console.log(localStorage.getItem("Scores"))
+  var userlog = JSON.parse(localStorage.getItem("codeQuiz")) || [];
+  document.getElementById("high-score").innerHTML = "<h5>High Scores</h5>"
+  var userHighScore;
+  var userHighScoreName;
+  var currentHighScore;
+  for (let i = 0; i < userlog.length; i++) {
+    console.log(localStorage.getItem("codeQuiz"))
+    var element = document.createElement("p");
+    element.textContent = "user " + userlog[i].initials + "score " + userlog[i].score;
+    document.getElementById("high-score").append(element)
+  }
+
+}
+
+function endGame() {
+  finishButton.classList.add("hide")
+  questionElement.classList.add("hide")
+  answerButtonsElement.classList.add("hide")
+  endScreenElement.classList.remove("hide")
+  //stop timer, enter time value to scoreboard
+  //initials need to go to scoreboard
+  clearInterval(timerInterval);
+  finalScore.innerText = (secondsLeft)
+}
+
+
+
+displayUserScore()
+function endQuiz() {
+  var quizScore = document.createElement("h3")
+  quizScore.innerText = "Your Score is " + secondsleft;
+  final - container.prepend(quizScore);
+  displayUserScore()
+}
+// var score = JSON.parse(localStorage.getItem("HighScore")) || []
+// var newScore = { "initials": initials, "high-score": secondsleft }
+// function displayHighScore() {
+//   $("#high-score").empty();
+//   for (var i = 0; i < newScore.length; i++) {
+//     var pastScores = $(`<div></div>`);
+//     pastScores.text(newScore[i]);
+//     $("#high-score").prepend(pastScores);
+//   }
+// }
+// score.push(newScore)
+// localStorage.setItem("HighScore", JSON.stringify(score))
+// $("#high-score").text(initials);
+
 function setStatusClass(element, correct) {
   // Takes element that will be cleared   
   clearStatusClass(element)
   // if correct add right class
+
   if (correct) {
     element.classList.add('correct')
     // add wrong class
   } else {
     element.classList.add('wrong')
+
   }
 }
 
@@ -112,16 +180,20 @@ function showQuestion(data) {
     button.innerText = answer.text
     button.classList.add('btn')
     if (answer.correct) {
-      button.dataset.correct = answer.correct
-    }
-    button.addEventListener('click', chooseAnswer)
-    //apends button that was created.
-    answerBtEl.appendChild(button)
-  });
+      button.addEventListener("click", function (choice) {
+        chooseAnswer(choice)
 
+      })
+    } else {
+      button.addEventListener("click", function (choice) {
+        chooseAnswer(choice)
+        secondsleft -= 5;
+      })
+    }
+    answerBtEl.appendChild(button)
+  })
 
 }
-
 
 function resetState() {
   clearStatusClass(document.body)
@@ -140,9 +212,9 @@ function setTime() {
     timeEl.textContent = secondsleft
     // if time ran out
     document.getElementById('time-down')
-    if (secondsleft < 0) {
+    if (secondsleft === 0) {
       clearInterval(timerinterval);
-      alert("time is up!")
+      endQuiz()
     }
     // if (secondsleft === 0) {
     //   clearInterval(timerinterval);
@@ -203,5 +275,6 @@ const questions = [
     ]
   }
 ]
+
 
 

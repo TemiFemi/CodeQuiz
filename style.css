@@ -29,13 +29,19 @@ body.wrong {
     --hue: var(--hue-wrong);
 }
 
+.title {
+    color: white;
+    display: flex;
+    flex-direction: row;
+}
+
 .container {
     width:800px;
     max-width: 80%;
     background-color: white;
     border-radius: 5px;
     padding:10px;
-    box-shadow: 0 0 10px;
+    box-shadow: 5 5 10px;
 
 }
 
